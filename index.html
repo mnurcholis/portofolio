@@ -23,30 +23,84 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
-    html { font-family: 'Inter', sans-serif; }
+    html { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
     .gradient-text {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+      background: linear-gradient(135deg, #818cf8, #a78bfa);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .card-hover {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     }
     .card-hover:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 40px rgba(99, 102, 241, 0.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(99, 102, 241, 0.08);
     }
     .nav-link { position: relative; }
     .nav-link::after {
       content: '';
       position: absolute;
       bottom: -2px; left: 0;
-      width: 0; height: 2px;
-      background: #6366f1;
-      transition: width 0.25s ease;
+      width: 0; height: 1.5px;
+      background: #818cf8;
+      transition: width 0.3s ease;
     }
     .nav-link:hover::after { width: 100%; }
+    .section-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: #818cf8; margin-bottom: 0.75rem;
+    }
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-content {
+      position: relative; max-width: 900px; width: 90%;
+      transform: scale(0.95); transition: transform 0.3s ease;
+    }
+    .modal-overlay.active .modal-content { transform: scale(1); }
+    .modal-img {
+      width: 100%; border-radius: 0.75rem;
+      object-fit: contain; max-height: 80vh;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .modal-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      color: white; font-size: 18px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .modal-nav:hover { background: rgba(255,255,255,0.2); }
+    .modal-prev { left: -56px; }
+    .modal-next { right: -56px; }
+    .modal-close {
+      position: absolute; top: -44px; right: 0;
+      background: none; border: none; color: rgba(255,255,255,0.6);
+      font-size: 14px; cursor: pointer; transition: color 0.2s;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .modal-close:hover { color: white; }
+    .modal-counter {
+      text-align: center; margin-top: 12px;
+      font-size: 0.75rem; color: rgba(255,255,255,0.4);
+    }
+    .modal-title {
+      position: absolute; top: -44px; left: 0;
+      font-size: 0.875rem; font-weight: 500; color: rgba(255,255,255,0.8);
+    }
+    @media (max-width: 768px) {
+      .modal-prev { left: 8px; }
+      .modal-next { right: 8px; }
+      .modal-nav { width: 36px; height: 36px; background: rgba(0,0,0,0.5); }
+    }
   </style>
 </head>
 <body class="bg-gray-950 text-gray-100 antialiased">
@@ -63,7 +117,7 @@
         <li><a href="#experience" class="nav-link hover:text-white transition-colors">Pengalaman</a></li>
         <li>
           <a href="#contact"
-             class="px-4 py-2 rounded-lg bg-brand hover:bg-brand-dark text-white transition-colors text-sm font-semibold">
+             class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white transition-colors text-sm font-medium">
             Hubungi Saya
           </a>
         </li>
@@ -85,46 +139,28 @@
 
     <!-- HERO -->
     <section id="hero" class="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
-      <div class="max-w-3xl mx-auto">
+      <div class="max-w-2xl mx-auto">
         <div class="mb-8 flex justify-center">
-          <div class="relative">
-            <div class="absolute -inset-1 bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-500 rounded-full blur-sm opacity-75 animate-pulse"></div>
-            <img src="assets/img/profile.jpg" alt="M. Nurcholis" class="relative w-32 h-32 rounded-full object-cover border-2 border-gray-900 shadow-2xl" />
-          </div>
+          <img src="assets/img/profile.jpg" alt="M. Nurcholis" class="w-28 h-28 rounded-full object-cover border-2 border-gray-800 shadow-lg" />
         </div>
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-6 uppercase tracking-widest">
-          <span class="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse"></span>
-          Tersedia untuk proyek baru
-        </span>
 
-        <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
-          Halo, saya <br/>
-          <span class="gradient-text">M. Nurcholis</span>
+        <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-5">
+          Halo, saya <span class="gradient-text">Nurcholis</span>
         </h1>
 
-        <p class="text-lg md:text-xl text-gray-400 leading-relaxed mb-10 max-w-xl mx-auto">
-          Web Programmer dengan 4+ tahun pengalaman membangun sistem informasi berbasis <strong class="text-gray-300">Laravel</strong> &amp; <strong class="text-gray-300">CodeIgniter</strong> untuk instansi pemerintah dan swasta.
+        <p class="text-base md:text-lg text-gray-400 leading-relaxed mb-10 max-w-lg mx-auto">
+          Web Programmer · 4+ tahun membangun sistem informasi berbasis <strong class="text-gray-300">Laravel</strong> &amp; <strong class="text-gray-300">CodeIgniter</strong> untuk pemerintah dan swasta.
         </p>
 
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
           <a href="#projects"
-             class="px-7 py-3 rounded-xl bg-brand hover:bg-brand-dark text-white font-semibold transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40">
-            Lihat Proyek Saya
+             class="px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors">
+            Lihat Proyek
           </a>
           <a href="#contact"
-             class="px-7 py-3 rounded-xl border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-semibold transition-all">
+             class="px-6 py-3 rounded-lg border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-medium transition-colors">
             Hubungi Saya
           </a>
-        </div>
-
-        <div class="mt-16 flex flex-wrap justify-center gap-3">
-          <span class="text-xs text-gray-600 self-center mr-1 uppercase tracking-wider">Stack:</span>
-          <span class="px-3 py-1 rounded-full bg-gray-800 text-gray-400 text-xs font-medium border border-gray-700">PHP (Laravel/CI)</span>
-          <span class="px-3 py-1 rounded-full bg-gray-800 text-gray-400 text-xs font-medium border border-gray-700">MySQL</span>
-          <span class="px-3 py-1 rounded-full bg-gray-800 text-gray-400 text-xs font-medium border border-gray-700">JavaScript / AJAX</span>
-          <span class="px-3 py-1 rounded-full bg-gray-800 text-gray-400 text-xs font-medium border border-gray-700">Tailwind / Bootstrap</span>
-          <span class="px-3 py-1 rounded-full bg-gray-800 text-gray-400 text-xs font-medium border border-gray-700">Git / GitHub</span>
-          <span class="px-3 py-1 rounded-full bg-gray-800 text-gray-400 text-xs font-medium border border-gray-700">HTML5 / CSS3</span>
         </div>
       </div>
     </section>
@@ -133,10 +169,7 @@
     <section id="about" class="py-24 px-6">
       <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
         <div class="flex justify-center md:justify-start">
-          <div class="relative group">
-            <div class="absolute -inset-1.5 bg-gradient-to-br from-indigo-500 via-purple-500 to-cyan-500 rounded-2xl blur opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
-            <img src="assets/img/profile.jpg" alt="M. Nurcholis" class="relative w-64 h-64 rounded-2xl object-cover border border-gray-800 shadow-2xl" />
-          </div>
+          <img src="assets/img/profile.jpg" alt="M. Nurcholis" class="w-64 h-72 rounded-2xl object-cover border border-gray-800/60" />
         </div>
         <div>
           <p class="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">Tentang Saya</p>
@@ -158,226 +191,192 @@
     </section>
 
     <!-- PROJECTS -->
-    <section id="projects" class="py-24 px-6 bg-gray-900/40">
-      <div class="max-w-6xl mx-auto">
+    <section id="projects" class="py-24 px-6">
+      <div class="max-w-4xl mx-auto">
         <div class="text-center mb-14">
-          <p class="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">Karya Terpilih</p>
-          <h2 class="text-3xl md:text-4xl font-bold">Proyek Saya</h2>
+          <p class="section-label">Proyek</p>
+          <h2 class="text-3xl font-bold">Karya Terpilih</h2>
         </div>
 
-        <div class="grid sm:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div class="grid md:grid-cols-2 gap-5">
 
-          <!-- Card 1 -->
-          <article class="card-hover flex flex-col bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-indigo-500/40">
-            <div class="text-3xl mb-4">🏛️</div>
+          <article class="card-hover flex flex-col bg-gray-900/50 border border-gray-800/60 rounded-xl p-5 hover:border-indigo-500/30">
             <div class="flex items-center gap-2 mb-3">
-              <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">Pemerintahan</span>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 font-medium">Live</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-medium">Pemerintahan</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 font-medium">Live</span>
             </div>
-            <h3 class="text-lg font-bold mb-2">Sistem Aprizob</h3>
-            <p class="text-gray-400 text-sm leading-relaxed flex-1 mb-5">
-              Platform digitalisasi administrasi publik Kabupaten Wonosobo. Dikembangkan untuk Diskominfo guna meningkatkan efisiensi layanan masyarakat.
+            <h3 class="font-semibold mb-1.5">Sistem Aprizob</h3>
+            <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-4">
+              Digitalisasi administrasi publik Kabupaten Wonosobo untuk Diskominfo.
             </p>
-            <div class="flex flex-wrap gap-2 mb-5">
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">Laravel</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">MySQL</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">Bootstrap</span>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">Laravel</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">MySQL</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">Bootstrap</span>
             </div>
             <a href="https://aprizob.wonosobokab.go.id" target="_blank" rel="noopener noreferrer"
-               class="text-center py-2 rounded-lg bg-brand hover:bg-brand-dark text-white text-sm font-semibold transition-colors">
-              Buka Website
+               class="text-center py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium transition-colors">
+              Buka Website →
             </a>
           </article>
 
-          <!-- Card 2 -->
-          <article class="card-hover flex flex-col bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-indigo-500/40">
-            <div class="text-3xl mb-4">📈</div>
+          <article class="card-hover flex flex-col bg-gray-900/50 border border-gray-800/60 rounded-xl p-5 hover:border-indigo-500/30">
             <div class="flex items-center gap-2 mb-3">
-              <span class="text-xs px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20 font-medium">Pemerintahan</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-medium">Pemerintahan</span>
             </div>
-            <h3 class="text-lg font-bold mb-2">Monitoring Adbang</h3>
-            <p class="text-gray-400 text-sm leading-relaxed flex-1 mb-5">
-              Platform monitoring realisasi pembangunan daerah secara real-time untuk Diskominfo Wonosobo. Memudahkan evaluasi progress proyek pembangunan.
+            <h3 class="font-semibold mb-1.5">Monitoring Adbang</h3>
+            <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-4">
+              Monitoring realisasi pembangunan daerah real-time untuk Diskominfo Wonosobo.
             </p>
-            <div class="flex flex-wrap gap-2 mb-5">
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">Laravel</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">MySQL</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">JavaScript</span>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">Laravel</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">MySQL</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">JavaScript</span>
             </div>
-            <div class="py-2 rounded-lg border border-gray-700 text-gray-500 text-sm font-medium text-center">
-              Internal System
-            </div>
+            <div class="py-2 rounded-lg border border-gray-800/60 text-gray-600 text-sm text-center">Internal</div>
           </article>
 
-          <!-- Card 3 -->
-          <article class="card-hover flex flex-col bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-indigo-500/40">
-            <div class="text-3xl mb-4">🤝</div>
+          <article class="card-hover flex flex-col bg-gray-900/50 border border-gray-800/60 rounded-xl p-5 hover:border-indigo-500/30">
             <div class="flex items-center gap-2 mb-3">
-              <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">Freelance</span>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 font-medium">2024 – Kini</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 font-medium">Freelance</span>
+              <span class="text-xs text-gray-600">2024 – Kini</span>
             </div>
-            <h3 class="text-lg font-bold mb-2">CRM Management — BBCI</h3>
-            <p class="text-gray-400 text-sm leading-relaxed flex-1 mb-5">
-              Aplikasi CRM terintegrasi untuk manajemen hubungan pelanggan, pipeline penjualan, dan pelaporan performa tim sales.
+            <h3 class="font-semibold mb-1.5">CRM Management — BBCI</h3>
+            <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-4">
+              CRM terintegrasi untuk manajemen pelanggan, pipeline penjualan, dan pelaporan performa.
             </p>
-            <div class="flex flex-wrap gap-2 mb-5">
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">Laravel</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">MySQL</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">AJAX</span>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">Laravel</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">MySQL</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">AJAX</span>
             </div>
-            <div class="py-2 rounded-lg border border-gray-700 text-gray-500 text-sm font-medium text-center">
-              Private Project
-            </div>
+            <button onclick="openGallery('CRM Management — BBCI', ['assets/img/bbci/bbci-1.png','assets/img/bbci/bbci-2.png','assets/img/bbci/bbci-3.png','assets/img/bbci/bbci-4.png','assets/img/bbci/bbci-5.png'])"
+               class="py-2 rounded-lg border border-indigo-500/30 text-indigo-400 text-sm font-medium text-center hover:bg-indigo-500/10 transition-colors cursor-pointer">
+              Lihat Preview
+            </button>
           </article>
 
-          <!-- Card 4 -->
-          <article class="card-hover flex flex-col bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-indigo-500/40">
-            <div class="text-3xl mb-4">💰</div>
+          <article class="card-hover flex flex-col bg-gray-900/50 border border-gray-800/60 rounded-xl p-5 hover:border-indigo-500/30">
             <div class="flex items-center gap-2 mb-3">
-              <span class="text-xs px-2 py-0.5 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 font-medium">Freelance</span>
-              <span class="text-xs px-2 py-0.5 rounded-full bg-gray-700/50 text-gray-400 border border-gray-600/20 font-medium">2024</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 font-medium">Freelance</span>
+              <span class="text-xs text-gray-600">2024</span>
             </div>
-            <h3 class="text-lg font-bold mb-2">Internal Finance — Exco</h3>
-            <p class="text-gray-400 text-sm leading-relaxed flex-1 mb-5">
-              Sistem pengelolaan keuangan internal perusahaan yang aman dan transparan, mencakup pencatatan transaksi, laporan keuangan, dan audit trail.
+            <h3 class="font-semibold mb-1.5">Internal Finance — Exco</h3>
+            <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-4">
+              Pengelolaan keuangan internal perusahaan, pencatatan transaksi, dan audit trail.
             </p>
-            <div class="flex flex-wrap gap-2 mb-5">
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">CodeIgniter</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">MySQL</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">Bootstrap</span>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">CodeIgniter</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">MySQL</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">Bootstrap</span>
             </div>
-            <div class="py-2 rounded-lg border border-gray-700 text-gray-500 text-sm font-medium text-center">
-              Private Project
-            </div>
+            <div class="py-2 rounded-lg border border-gray-800/60 text-gray-600 text-sm text-center">Private</div>
           </article>
 
-          <!-- Card 5 -->
-          <article class="card-hover flex flex-col bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-indigo-500/40">
-            <div class="text-3xl mb-4">🚗</div>
+          <article class="card-hover flex flex-col bg-gray-900/50 border border-gray-800/60 rounded-xl p-5 hover:border-indigo-500/30">
             <div class="flex items-center gap-2 mb-3">
-              <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-medium">Freelance</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-400 font-medium">Freelance</span>
             </div>
-            <h3 class="text-lg font-bold mb-2">Salesforce Platform — Finfleet</h3>
-            <p class="text-gray-400 text-sm leading-relaxed flex-1 mb-5">
-              Kontribusi pengembangan platform internal Finfleet untuk sales tracking, monitoring performa agen, dan dashboard laporan penjualan.
+            <h3 class="font-semibold mb-1.5">Salesforce Platform — Finfleet</h3>
+            <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-4">
+              Platform sales tracking, monitoring performa agen, dan dashboard penjualan.
             </p>
-            <div class="flex flex-wrap gap-2 mb-5">
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">Laravel</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">MySQL</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">Tailwind</span>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">Laravel</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">MySQL</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">Tailwind</span>
             </div>
-            <div class="py-2 rounded-lg border border-gray-700 text-gray-500 text-sm font-medium text-center">
-              Private Project
-            </div>
+            <div class="py-2 rounded-lg border border-gray-800/60 text-gray-600 text-sm text-center">Private</div>
           </article>
 
-          <!-- Card 6 -->
-          <article class="card-hover flex flex-col bg-gray-900 border border-gray-800 rounded-2xl p-6 hover:border-indigo-500/40">
-            <div class="text-3xl mb-4">📣</div>
+          <article class="card-hover flex flex-col bg-gray-900/50 border border-gray-800/60 rounded-xl p-5 hover:border-indigo-500/30">
             <div class="flex items-center gap-2 mb-3">
-              <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">Pemerintahan</span>
+              <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 font-medium">Pemerintahan</span>
             </div>
-            <h3 class="text-lg font-bold mb-2">AyoPromo.com</h3>
-            <p class="text-gray-400 text-sm leading-relaxed flex-1 mb-5">
-              Pengembangan platform promosi digital berskala nasional untuk mempertemukan brand dengan konsumen melalui berbagai kanal promosi.
+            <h3 class="font-semibold mb-1.5">AyoPromo.com</h3>
+            <p class="text-gray-500 text-sm leading-relaxed flex-1 mb-4">
+              Platform promosi digital berskala nasional untuk mempertemukan brand dengan konsumen.
             </p>
-            <div class="flex flex-wrap gap-2 mb-5">
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">Laravel</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">MySQL</span>
-              <span class="text-xs px-2 py-1 rounded-md bg-gray-800 text-gray-400">JavaScript</span>
+            <div class="flex flex-wrap gap-1.5 mb-4">
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">Laravel</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">MySQL</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800/80 text-gray-500">JavaScript</span>
             </div>
-            <div class="py-2 rounded-lg border border-gray-700 text-gray-500 text-sm font-medium text-center">
-              Private Project
-            </div>
+            <button onclick="openGallery('AyoPromo.com', ['assets/img/ayopromo/ayopromo-1.png','assets/img/ayopromo/ayopromo-2.png','assets/img/ayopromo/ayopromo-3.png','assets/img/ayopromo/ayopromo-4.png'])"
+               class="py-2 rounded-lg border border-indigo-500/30 text-indigo-400 text-sm font-medium text-center hover:bg-indigo-500/10 transition-colors cursor-pointer">
+              Lihat Preview
+            </button>
           </article>
 
         </div>
       </div>
     </section>
 
-    <!-- EXPERIENCE -->
-    <section id="experience" class="py-24 px-6">
+    <section id="experience" class="py-24 px-6 border-t border-gray-800/30">
       <div class="max-w-3xl mx-auto">
         <div class="text-center mb-14">
-          <p class="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">Rekam Jejak</p>
-          <h2 class="text-3xl md:text-4xl font-bold">Pengalaman Kerja</h2>
+          <p class="section-label">Pengalaman</p>
+          <h2 class="text-3xl font-bold">Rekam Jejak</h2>
         </div>
 
-        <div class="relative">
-          <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-gray-800 md:-translate-x-px"></div>
+        <div class="space-y-6">
 
-          <div class="space-y-10">
-
-            <!-- Job 1 -->
-            <div class="relative flex flex-col md:flex-row md:justify-end gap-4 md:gap-0 pl-8 md:pl-0 md:pr-[calc(50%+2rem)]">
-              <div class="absolute left-0 md:left-1/2 top-1 w-3 h-3 rounded-full bg-indigo-500 border-2 border-gray-950 -translate-x-1 md:-translate-x-1.5 ring-4 ring-indigo-500/20"></div>
-              <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 w-full hover:border-indigo-500/30 transition-colors">
-                <div class="flex items-start justify-between gap-2 mb-2 flex-wrap">
-                  <h3 class="font-bold text-white">Web Programmer</h3>
-                  <span class="shrink-0 text-xs text-indigo-400 font-semibold bg-indigo-500/10 px-2 py-0.5 rounded-full">Feb 2023 – Sekarang</span>
-                </div>
-                <p class="text-sm text-indigo-400 font-medium mb-3">Diskominfo Kabupaten Wonosobo · On-site</p>
-                <ul class="text-sm text-gray-400 space-y-1.5 list-disc list-inside">
-                  <li>Mengembangkan <strong class="text-gray-300">Sistem Aprizob</strong> untuk digitalisasi administrasi publik.</li>
-                  <li>Membangun platform <strong class="text-gray-300">Monitoring Adbang</strong> evaluasi realisasi pembangunan real-time.</li>
-                  <li>Pemeliharaan dan optimasi teknis berbagai portal website OPD.</li>
-                </ul>
-              </div>
+          <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-5 hover:border-indigo-500/20 transition-colors">
+            <div class="flex items-start justify-between gap-2 mb-1.5 flex-wrap">
+              <h3 class="font-semibold">Web Programmer</h3>
+              <span class="text-xs text-gray-500">Feb 2023 – Sekarang</span>
             </div>
-
-            <!-- Job 2 -->
-            <div class="relative flex flex-col md:flex-row gap-4 md:gap-0 pl-8 md:pl-[calc(50%+2rem)]">
-              <div class="absolute left-0 md:left-1/2 top-1 w-3 h-3 rounded-full bg-purple-500 border-2 border-gray-950 -translate-x-1 md:-translate-x-1.5 ring-4 ring-purple-500/20"></div>
-              <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 w-full hover:border-purple-500/30 transition-colors">
-                <div class="flex items-start justify-between gap-2 mb-2 flex-wrap">
-                  <h3 class="font-bold text-white">Web Programmer</h3>
-                  <span class="shrink-0 text-xs text-purple-400 font-semibold bg-purple-500/10 px-2 py-0.5 rounded-full">Apr 2022 – Mei 2022</span>
-                </div>
-                <p class="text-sm text-purple-400 font-medium mb-3">Hadi GRUP</p>
-                <ul class="text-sm text-gray-400 space-y-1.5 list-disc list-inside">
-                  <li>Merancang dan menguji <strong class="text-gray-300">Web CMS berbasis Laravel</strong> untuk manajemen konten mandiri klien korporat.</li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Job 3 -->
-            <div class="relative flex flex-col md:flex-row md:justify-end gap-4 md:gap-0 pl-8 md:pl-0 md:pr-[calc(50%+2rem)]">
-              <div class="absolute left-0 md:left-1/2 top-1 w-3 h-3 rounded-full bg-cyan-500 border-2 border-gray-950 -translate-x-1 md:-translate-x-1.5 ring-4 ring-cyan-500/20"></div>
-              <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 w-full hover:border-cyan-500/30 transition-colors">
-                <div class="flex items-start justify-between gap-2 mb-2 flex-wrap">
-                  <h3 class="font-bold text-white">Web Programmer</h3>
-                  <span class="shrink-0 text-xs text-cyan-400 font-semibold bg-cyan-500/10 px-2 py-0.5 rounded-full">Feb 2017 – Des 2020</span>
-                </div>
-                <p class="text-sm text-cyan-400 font-medium mb-3">PT. Pelita Satria Perkasa</p>
-                <ul class="text-sm text-gray-400 space-y-1.5 list-disc list-inside">
-                  <li>Mengembangkan aplikasi <strong class="text-gray-300">Point of Sale (POS)</strong> dan sistem absensi karyawan.</li>
-                  <li>Meningkatkan efisiensi input data kehadiran sebesar <strong class="text-gray-300">30%</strong>.</li>
-                </ul>
-              </div>
-            </div>
-
+            <p class="text-sm text-indigo-400/80 mb-3">Diskominfo Kabupaten Wonosobo</p>
+            <ul class="text-sm text-gray-500 space-y-1 list-disc list-inside">
+              <li>Mengembangkan <strong class="text-gray-400">Sistem Aprizob</strong> untuk digitalisasi administrasi publik.</li>
+              <li>Membangun platform <strong class="text-gray-400">Monitoring Adbang</strong> evaluasi realisasi pembangunan.</li>
+              <li>Pemeliharaan dan optimasi portal website OPD.</li>
+            </ul>
           </div>
+
+          <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-5 hover:border-indigo-500/20 transition-colors">
+            <div class="flex items-start justify-between gap-2 mb-1.5 flex-wrap">
+              <h3 class="font-semibold">Web Programmer</h3>
+              <span class="text-xs text-gray-500">Apr 2022 – Mei 2022</span>
+            </div>
+            <p class="text-sm text-indigo-400/80 mb-3">Hadi GRUP</p>
+            <ul class="text-sm text-gray-500 space-y-1 list-disc list-inside">
+              <li>Merancang dan menguji <strong class="text-gray-400">Web CMS berbasis Laravel</strong> untuk klien korporat.</li>
+            </ul>
+          </div>
+
+          <div class="bg-gray-900/50 border border-gray-800/60 rounded-xl p-5 hover:border-indigo-500/20 transition-colors">
+            <div class="flex items-start justify-between gap-2 mb-1.5 flex-wrap">
+              <h3 class="font-semibold">Web Programmer</h3>
+              <span class="text-xs text-gray-500">Feb 2017 – Des 2020</span>
+            </div>
+            <p class="text-sm text-indigo-400/80 mb-3">PT. Pelita Satria Perkasa</p>
+            <ul class="text-sm text-gray-500 space-y-1 list-disc list-inside">
+              <li>Mengembangkan <strong class="text-gray-400">Point of Sale (POS)</strong> dan sistem absensi.</li>
+              <li>Meningkatkan efisiensi input data kehadiran sebesar <strong class="text-gray-400">30%</strong>.</li>
+            </ul>
+          </div>
+
         </div>
       </div>
     </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="py-24 px-6 bg-gray-900/40">
-      <div class="max-w-xl mx-auto text-center">
-        <p class="text-xs font-bold uppercase tracking-widest text-indigo-400 mb-3">Kontak</p>
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">Mari Berkolaborasi</h2>
-        <p class="text-gray-400 mb-8">
-          Terbuka untuk peluang full-time, freelance, maupun kolaborasi proyek. Hubungi saya lewat email atau WhatsApp.
+    <section id="contact" class="py-24 px-6 border-t border-gray-800/30">
+      <div class="max-w-lg mx-auto text-center">
+        <p class="section-label">Kontak</p>
+        <h2 class="text-3xl font-bold mb-3">Mari Berkolaborasi</h2>
+        <p class="text-gray-500 text-sm mb-8">
+          Terbuka untuk full-time, freelance, maupun kolaborasi proyek.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
           <a href="mailto:mmnurcholis969@gmail.com"
-             class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-brand hover:bg-brand-dark text-white font-semibold transition-all shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            Kirim Email
+             class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-medium transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            Email
           </a>
           <a href="https://wa.me/6282243041272" target="_blank" rel="noopener noreferrer"
-             class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl border border-gray-700 hover:border-green-500/50 hover:bg-green-500/10 text-gray-300 hover:text-green-400 font-semibold transition-all">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+             class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-gray-700 hover:border-gray-500 text-gray-300 hover:text-white font-medium transition-colors">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             WhatsApp
           </a>
         </div>
@@ -387,10 +386,10 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="py-10 px-6 border-t border-gray-800/50">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-      <p class="text-sm text-gray-600">
-        © 2026 <span class="text-gray-400 font-medium">M. Nurcholis</span>. Web Programmer — Banjarnegara, Jawa Tengah.
+  <footer class="py-8 px-6 border-t border-gray-800/30">
+    <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-gray-600">
+        © 2026 M. Nurcholis · Banjarnegara, Jawa Tengah
       </p>
       <div class="flex items-center gap-4">
         <!-- GitHub -->
@@ -455,6 +454,58 @@
       el.style.transform = 'translateY(20px)';
       el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       observer.observe(el);
+    });
+  </script>
+
+  <!-- GALLERY MODAL -->
+  <div id="gallery-modal" class="modal-overlay" onclick="if(event.target===this)closeGallery()">
+    <div class="modal-content">
+      <span class="modal-title" id="gallery-title"></span>
+      <button class="modal-close" onclick="closeGallery()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        ESC
+      </button>
+      <button class="modal-nav modal-prev" onclick="galleryNav(-1)">‹</button>
+      <img id="gallery-img" class="modal-img" src="" alt="Preview" />
+      <button class="modal-nav modal-next" onclick="galleryNav(1)">›</button>
+      <div class="modal-counter" id="gallery-counter"></div>
+    </div>
+  </div>
+
+  <script>
+    let galleryImages = [];
+    let galleryIndex = 0;
+
+    function openGallery(title, images) {
+      galleryImages = images;
+      galleryIndex = 0;
+      document.getElementById('gallery-title').textContent = title;
+      updateGallery();
+      document.getElementById('gallery-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeGallery() {
+      document.getElementById('gallery-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function galleryNav(dir) {
+      galleryIndex = (galleryIndex + dir + galleryImages.length) % galleryImages.length;
+      updateGallery();
+    }
+
+    function updateGallery() {
+      document.getElementById('gallery-img').src = galleryImages[galleryIndex];
+      document.getElementById('gallery-counter').textContent =
+        (galleryIndex + 1) + ' / ' + galleryImages.length;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!document.getElementById('gallery-modal').classList.contains('active')) return;
+      if (e.key === 'Escape') closeGallery();
+      if (e.key === 'ArrowLeft') galleryNav(-1);
+      if (e.key === 'ArrowRight') galleryNav(1);
     });
   </script>
 
